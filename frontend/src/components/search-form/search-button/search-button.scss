@@ -1,0 +1,27 @@
+.search-button {
+    height: 35px;
+    border: none;
+    color: white;
+    border-radius: 6px;
+    background: #255cf1;
+    padding: 0 16px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    min-width: 80px;
+
+    &:hover:not(:disabled) {
+        background: #1e4bd8;
+    }
+
+    &:active:not(:disabled) {
+        transform: translateY(1px);
+    }
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+    }
+}

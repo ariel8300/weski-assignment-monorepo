@@ -1,0 +1,175 @@
+.accommodation-results {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  .results-header {
+    margin-bottom: 20px;
+    
+    h2 {
+      font-size: 24px;
+      color: #333;
+      margin: 0;
+    }
+  }
+
+  .loading, .no-results {
+    text-align: center;
+    padding: 40px;
+    font-size: 18px;
+    color: #666;
+  }
+
+  .results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 20px;
+  }
+
+  .accommodation-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    }
+
+    .card-image {
+      height: 200px;
+      overflow: hidden;
+      position: relative;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+      }
+
+      &:hover img {
+        transform: scale(1.05);
+      }
+    }
+
+    .card-content {
+      padding: 16px;
+
+      .hotel-name {
+        font-size: 18px;
+        font-weight: 600;
+        color: #333;
+        margin: 0 0 12px 0;
+        line-height: 1.3;
+      }
+
+      .hotel-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+
+        .rating {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+
+          .stars {
+            color: #ffd700;
+            font-size: 14px;
+          }
+
+          .rating-text {
+            font-size: 14px;
+            color: #666;
+            font-weight: 500;
+          }
+        }
+
+        .beds {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+          font-size: 14px;
+          color: #666;
+
+          .beds-icon {
+            font-size: 16px;
+          }
+        }
+      }
+
+      .distances {
+        margin-bottom: 16px;
+
+        .distance-item {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 4px;
+          font-size: 14px;
+          color: #666;
+
+          .distance-icon {
+            font-size: 16px;
+            width: 20px;
+          }
+        }
+      }
+
+      .price {
+        display: flex;
+        align-items: baseline;
+        gap: 4px;
+
+        .price-amount {
+          font-size: 20px;
+          font-weight: 700;
+          color: #2c7be5;
+        }
+
+        .price-period {
+          font-size: 14px;
+          color: #666;
+        }
+      }
+    }
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .accommodation-results {
+    padding: 16px;
+
+    .results-grid {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    .accommodation-card {
+      .card-content {
+        padding: 12px;
+
+        .hotel-name {
+          font-size: 16px;
+        }
+
+        .hotel-info {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 8px;
+        }
+
+        .price {
+          .price-amount {
+            font-size: 18px;
+          }
+        }
+      }
+    }
+  }
+} 

@@ -1,0 +1,42 @@
+@import "react-datepicker/dist/react-datepicker.css";
+
+.search-form {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: nowrap;
+    background: transparent;
+    padding: 0;
+    border-radius: 0;
+    box-shadow: none;
+    max-width: none;
+    margin: 0;
+
+    .search-form-date-picker {
+        background: white;
+        color: #333;
+        border-radius: 6px;
+        height: 35px;
+        border: 1px solid #dfe3eb;
+        padding: 0 12px;
+        width: 120px;
+        font-size: 14px;
+        transition: border-color 0.2s ease;
+
+        &:focus {
+            outline: none;
+            border-color: #255cf1;
+        }
+    }
+
+    // Responsive design
+    @media (max-width: 768px) {
+        flex-wrap: wrap;
+        gap: 8px;
+
+        .search-form-date-picker {
+            width: 100px;
+        }
+    }
+}
