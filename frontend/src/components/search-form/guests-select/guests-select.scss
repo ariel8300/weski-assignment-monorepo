@@ -13,6 +13,8 @@
 	box-shadow: none;
     border: 1px solid #dfe3eb;
     width: 220px;
+    position: relative;
+    z-index: 1000;
 }
 
 .guests-select-content {
@@ -23,6 +25,7 @@
 		0px 10px 38px -10px rgba(22, 23, 24, 0.35),
 		0px 10px 20px -15px rgba(22, 23, 24, 0.2);
     width: 220px;
+    z-index: 9999;
 }
 
 .guests-select-viewport {

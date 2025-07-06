@@ -3,6 +3,15 @@
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
+// Global z-index fixes for dropdowns
+[data-radix-popper-content-wrapper] {
+  z-index: 9999 !important;
+}
+
+[data-radix-portal] {
+  z-index: 9999 !important;
+}
+
 .main-content {
   padding: 20px;
   max-width: 1200px;

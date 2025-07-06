@@ -1,5 +1,14 @@
 @import "react-datepicker/dist/react-datepicker.css";
 
+// Fix z-index for date picker dropdowns
+.react-datepicker-popper {
+    z-index: 9999 !important;
+}
+
+.react-datepicker-wrapper {
+    z-index: 1000;
+}
+
 .search-form {
     display: flex;
     gap: 12px;
