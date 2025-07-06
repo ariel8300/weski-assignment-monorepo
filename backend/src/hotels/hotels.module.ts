@@ -3,7 +3,7 @@ import { HttpModule, HttpService } from '@nestjs/axios';
 import { HotelsController } from './hotels.controller';
 import { HotelsService } from './hotels.service';
 import { ProviderManagerService } from './services/provider-manager.service';
-import { AccommodationAggregatorService } from './services/accommodation-aggregator.service';
+import { HotelAggregatorService } from './services/hotel-aggregator.service';
 import { PowderWhiteProvider } from './providers/powder-white-provider';
 
 @Module({
@@ -12,7 +12,7 @@ import { PowderWhiteProvider } from './providers/powder-white-provider';
   providers: [
     HotelsService,
     ProviderManagerService,
-    AccommodationAggregatorService,
+    HotelAggregatorService,
     PowderWhiteProvider
   ],
 })
@@ -23,7 +23,7 @@ export class HotelsModule implements OnModuleInit {
   ) {}
 
   onModuleInit() {
-    // Register the Powder White provider
+    // Register the assignment's provider api
     this.providerManager.registerProvider(new PowderWhiteProvider(this.httpService));
   }
 } 

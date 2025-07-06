@@ -1,4 +1,4 @@
-import { SkiAccommodation } from '../components/accommodation-results/accommodation-results';
+import { SkiHotel } from '../components/hotel-results/hotel-results';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001';
 
@@ -10,29 +10,8 @@ export interface SearchParams {
 }
 
 export class ApiService {
-  static async searchSkiAccommodations(searchParams: SearchParams): Promise<SkiAccommodation[]> {
-    try {
-      const response = await fetch(`${API_BASE_URL}/hotels/search`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(searchParams),
-      });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error('Error fetching ski accommodations:', error);
-      throw error;
-    }
-  }
-
-  static async searchSkiAccommodationsForGroupSize(searchParams: SearchParams): Promise<SkiAccommodation[]> {
+  static async searchSkiHotelsForGroupSize(searchParams: SearchParams): Promise<SkiHotel[]> {
     try {
       const response = await fetch(`${API_BASE_URL}/hotels/search/group-size`, {
         method: 'POST',
@@ -49,7 +28,7 @@ export class ApiService {
       const data = await response.json();
       return data;
     } catch (error) {
-      console.error('Error fetching ski accommodations for group size:', error);
+      console.error('Error fetching ski hotels for group size:', error);
       throw error;
     }
   }

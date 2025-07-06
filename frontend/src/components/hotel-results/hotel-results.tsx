@@ -1,7 +1,7 @@
 import React from 'react';
-import './accommodation-results.scss';
+import './hotel-results.scss';
 
-export interface SkiAccommodation {
+export interface SkiHotel {
   HotelCode: string;
   HotelName: string;
   HotelDescriptiveContent: {
@@ -28,21 +28,21 @@ export interface SkiAccommodation {
   };
 }
 
-interface AccommodationResultsProps {
-  accommodations: SkiAccommodation[];
+interface HotelResultsProps {
+  hotels: SkiHotel[];
   isLoading: boolean;
   searchProgress?: {
     completed: number;
     total: number;
     currentGroupSize: number;
   } | null;
-  onHotelClick?: (hotel: SkiAccommodation) => void;
+  onHotelClick?: (hotel: SkiHotel) => void;
 }
 
-const AccommodationResults: React.FC<AccommodationResultsProps> = ({ accommodations, isLoading, searchProgress, onHotelClick }) => {
+const HotelResults: React.FC<HotelResultsProps> = ({ hotels, isLoading, searchProgress, onHotelClick }) => {
   if (isLoading) {
     return (
-      <div className="accommodation-results">
+      <div className="hotel-results">
         <div className="loading">
           {searchProgress ? (
             <div className="progressive-loading">
@@ -58,60 +58,60 @@ const AccommodationResults: React.FC<AccommodationResultsProps> = ({ accommodati
               <div className="progress-text">
                 {searchProgress.completed} of {searchProgress.total} group sizes completed
               </div>
-              {accommodations.length > 0 && (
+              {hotels.length > 0 && (
                 <div className="results-so-far">
-                  Found {accommodations.length} accommodations so far...
+                  Found {hotels.length} hotels so far...
                 </div>
               )}
             </div>
           ) : (
-            <div>Loading accommodations...</div>
+            <div>Loading hotels...</div>
           )}
         </div>
       </div>
     );
   }
 
-  if (accommodations.length === 0) {
+  if (hotels.length === 0) {
     return (
-      <div className="accommodation-results">
-        <div className="no-results">No accommodations found for your search criteria.</div>
+      <div className="hotel-results">
+        <div className="no-results">No hotels found for your search criteria.</div>
       </div>
     );
   }
 
-  const getMainImage = (images: SkiAccommodation['HotelDescriptiveContent']['Images']) => {
+  const getMainImage = (images: SkiHotel['HotelDescriptiveContent']['Images']) => {
     const mainImage = images.find(img => img.MainImage === 'True');
     return mainImage?.URL || images[0]?.URL || '';
   };
 
-  const getSkiLiftDistance = (distances: SkiAccommodation['HotelInfo']['Position']['Distances']) => {
+  const getSkiLiftDistance = (distances: SkiHotel['HotelInfo']['Position']['Distances']) => {
     const skiLift = distances.find(d => d.type === 'ski_lift');
     return skiLift?.distance || 'N/A';
   };
 
-  const getCityCenterDistance = (distances: SkiAccommodation['HotelInfo']['Position']['Distances']) => {
+  const getCityCenterDistance = (distances: SkiHotel['HotelInfo']['Position']['Distances']) => {
     const cityCenter = distances.find(d => d.type === 'city_center');
     return cityCenter?.distance || 'N/A';
   };
 
   return (
-    <div className="accommodation-results">
+    <div className="hotel-results">
       <div className="results-header">
-        <h2>Found {accommodations.length} accommodations</h2>
+        <h2>Found {hotels.length} hotels</h2>
       </div>
       <div className="results-grid">
-        {accommodations.map((accommodation) => (
+        {hotels.map((hotel) => (
           <div 
-            key={accommodation.HotelCode} 
-            className="accommodation-card"
-            onClick={() => onHotelClick?.(accommodation)}
+            key={hotel.HotelCode} 
+            className="hotel-card"
+            onClick={() => onHotelClick?.(hotel)}
             style={{ cursor: onHotelClick ? 'pointer' : 'default' }}
           >
             <div className="card-image">
               <img 
-                src={getMainImage(accommodation.HotelDescriptiveContent.Images)} 
-                alt={accommodation.HotelName}
+                src={getMainImage(hotel.HotelDescriptiveContent.Images)} 
+                alt={hotel.HotelName}
                 onError={(e) => {
                   const target = e.target as HTMLImageElement;
                   target.src = 'https://via.placeholder.com/300x200?text=No+Image';
@@ -119,29 +119,29 @@ const AccommodationResults: React.FC<AccommodationResultsProps> = ({ accommodati
               />
             </div>
             <div className="card-content">
-              <h3 className="hotel-name">{accommodation.HotelName}</h3>
+              <h3 className="hotel-name">{hotel.HotelName}</h3>
               <div className="hotel-info">
                 <div className="rating">
-                  <span className="stars">{'★'.repeat(parseInt(accommodation.HotelInfo.Rating))}</span>
-                  <span className="rating-text">{accommodation.HotelInfo.Rating}/5</span>
+                  <span className="stars">{'★'.repeat(parseInt(hotel.HotelInfo.Rating))}</span>
+                  <span className="rating-text">{hotel.HotelInfo.Rating}/5</span>
                 </div>
                 <div className="beds">
                   <span className="beds-icon">🛏️</span>
-                  <span>{accommodation.HotelInfo.Beds} beds</span>
+                  <span>{hotel.HotelInfo.Beds} beds</span>
                 </div>
               </div>
               <div className="distances">
                 <div className="distance-item">
                   <span className="distance-icon">⛷️</span>
-                  <span>Ski lift: {getSkiLiftDistance(accommodation.HotelInfo.Position.Distances)}</span>
+                  <span>Ski lift: {getSkiLiftDistance(hotel.HotelInfo.Position.Distances)}</span>
                 </div>
                 <div className="distance-item">
                   <span className="distance-icon">🏙️</span>
-                  <span>City center: {getCityCenterDistance(accommodation.HotelInfo.Position.Distances)}</span>
+                  <span>City center: {getCityCenterDistance(hotel.HotelInfo.Position.Distances)}</span>
                 </div>
               </div>
               <div className="price">
-                <span className="price-amount">€{parseFloat(accommodation.PricesInfo.AmountAfterTax).toFixed(2)}</span>
+                <span className="price-amount">€{parseFloat(hotel.PricesInfo.AmountAfterTax).toFixed(2)}</span>
                 <span className="price-period">per night</span>
               </div>
             </div>
@@ -152,4 +152,4 @@ const AccommodationResults: React.FC<AccommodationResultsProps> = ({ accommodati
   );
 };
 
-export default AccommodationResults; 
+export default HotelResults; 

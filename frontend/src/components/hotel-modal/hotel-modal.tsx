@@ -1,10 +1,10 @@
 import React from 'react';
 import './hotel-modal.scss';
-import { SkiAccommodation } from '../accommodation-results/accommodation-results';
+import { SkiHotel } from '../hotel-results/hotel-results';
 import HotelMap from '../hotel-map/hotel-map';
 
 interface HotelModalProps {
-  hotel: SkiAccommodation | null;
+  hotel: SkiHotel | null;
   isOpen: boolean;
   onClose: () => void;
 }
@@ -12,13 +12,13 @@ interface HotelModalProps {
 const HotelModal: React.FC<HotelModalProps> = ({ hotel, isOpen, onClose }) => {
   if (!isOpen || !hotel) return null;
 
-  const getMainImage = (images: SkiAccommodation['HotelDescriptiveContent']['Images']) => {
-    const mainImage = images.find(img => img.MainImage === 'True');
+  const getMainImage = (images: SkiHotel['HotelDescriptiveContent']['Images']) => {
+    const mainImage = images.find((img: { MainImage?: string }) => img.MainImage === 'True');
     return mainImage?.URL || images[0]?.URL || '';
   };
 
-  const getAllDistances = (distances: SkiAccommodation['HotelInfo']['Position']['Distances']) => {
-    return distances.map((distance, index) => (
+  const getAllDistances = (distances: SkiHotel['HotelInfo']['Position']['Distances']) => {
+    return distances.map((distance: { type: string; distance: string }, index: number) => (
       <div key={index} className="distance-item">
         <span className="distance-type">{distance.type.replace('_', ' ')}:</span>
         <span className="distance-value">{distance.distance}</span>
@@ -119,7 +119,7 @@ const HotelModal: React.FC<HotelModalProps> = ({ hotel, isOpen, onClose }) => {
             <div className="info-section">
               <h3>Hotel Images</h3>
               <div className="image-gallery">
-                {hotel.HotelDescriptiveContent.Images.map((image, index) => (
+                {hotel.HotelDescriptiveContent.Images.map((image: { URL: string }, index: number) => (
                   <div key={index} className="gallery-image">
                     <img 
                       src={image.URL} 

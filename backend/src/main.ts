@@ -9,8 +9,7 @@ async function bootstrap() {
   // Create the NestJS application instance
   const app = await NestFactory.create(AppModule);
   
-  // Configure CORS to allow frontend communication
-  // This enables cross-origin requests from our React frontend
+  // enables cross-origin requests from React frontend
   app.enableCors({
     origin: [
       'http://localhost:3000',  // Production frontend

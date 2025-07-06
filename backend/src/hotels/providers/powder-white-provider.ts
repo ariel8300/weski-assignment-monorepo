@@ -1,12 +1,12 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
-import { AccommodationProvider } from '../interfaces/provider.interface';
+import { HotelProvider } from '../interfaces/provider.interface';
 import { SkiTripSearchDto } from '../dto/ski-trip-search.dto';
-import { SkiAccommodation, SkiAccommodationApiResponse } from '../interfaces/ski-accommodation.interface';
+import { Hotel, HotelApiResponse } from '../interfaces/hotel.interface';
 
 @Injectable()
-export class PowderWhiteProvider implements AccommodationProvider {
+export class PowderWhiteProvider implements HotelProvider {
   readonly providerId = 'powder-white';
   readonly providerName = 'Powder White';
 
@@ -14,10 +14,10 @@ export class PowderWhiteProvider implements AccommodationProvider {
 
   constructor(private readonly httpService: HttpService) {}
 
-  async fetchAccommodations(searchDto: SkiTripSearchDto): Promise<SkiAccommodation[]> {
+  async fetchHotels(searchDto: SkiTripSearchDto): Promise<Hotel[]> {
     try {
       const response = await firstValueFrom(
-        this.httpService.post<SkiAccommodationApiResponse>(this.API_BASE_URL, {
+        this.httpService.post<HotelApiResponse>(this.API_BASE_URL, {
           query: searchDto
         }, {
           headers: {
@@ -44,7 +44,7 @@ export class PowderWhiteProvider implements AccommodationProvider {
       
       console.error(`Error fetching from ${this.providerName}:`, error);
       throw new HttpException(
-        `Failed to fetch accommodations from ${this.providerName}`,
+        `Failed to fetch hotels from ${this.providerName}`,
         HttpStatus.INTERNAL_SERVER_ERROR
       );
     }
@@ -60,7 +60,7 @@ export class PowderWhiteProvider implements AccommodationProvider {
         group_size: 1
       };
 
-      await this.fetchAccommodations(testSearchDto);
+      await this.fetchHotels(testSearchDto);
       return true;
     } catch (error) {
       console.error(`${this.providerName} health check failed:`, error);

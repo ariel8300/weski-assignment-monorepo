@@ -1,17 +1,17 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { AccommodationProvider, ProviderResult } from '../interfaces/provider.interface';
+import { HotelProvider, ProviderResult } from '../interfaces/provider.interface';
 import { SkiTripSearchDto } from '../dto/ski-trip-search.dto';
-import { SkiAccommodation } from '../interfaces/ski-accommodation.interface';
+import { Hotel } from '../interfaces/hotel.interface';
 
 @Injectable()
 export class ProviderManagerService {
   private readonly logger = new Logger(ProviderManagerService.name);
-  private providers: AccommodationProvider[] = [];
+  private providers: HotelProvider[] = [];
 
   /**
    * Register a new provider
    */
-  registerProvider(provider: AccommodationProvider): void {
+  registerProvider(provider: HotelProvider): void {
     this.providers.push(provider);
     this.logger.log(`Registered provider: ${provider.providerName} (${provider.providerId})`);
   }
@@ -19,12 +19,12 @@ export class ProviderManagerService {
   /**
    * Get all registered providers
    */
-  getProviders(): AccommodationProvider[] {
+  getProviders(): HotelProvider[] {
     return [...this.providers];
   }
 
   /**
-   * Fetch accommodations from all providers in parallel
+   * Fetch hotels from all providers in parallel
    * Includes performance monitoring and error handling
    */
   async fetchFromAllProviders(searchDto: SkiTripSearchDto, shouldLog: boolean = true): Promise<ProviderResult[]> {
@@ -42,17 +42,17 @@ export class ProviderManagerService {
       const startTime = Date.now();
       
       try {
-        const accommodations = await this.fetchFromProviderWithTimeout(provider, searchDto);
+        const hotels = await this.fetchFromProviderWithTimeout(provider, searchDto);
         const responseTime = Date.now() - startTime;
         
         if (shouldLog) {
-          this.logger.log(`${provider.providerName} returned ${accommodations.length} accommodations in ${responseTime}ms`);
+          this.logger.log(`${provider.providerName} returned ${hotels.length} hotels in ${responseTime}ms`);
         }
         
         return {
           providerId: provider.providerId,
           providerName: provider.providerName,
-          accommodations,
+          hotels,
           success: true,
           responseTime
         } as ProviderResult;
@@ -65,7 +65,7 @@ export class ProviderManagerService {
         return {
           providerId: provider.providerId,
           providerName: provider.providerName,
-          accommodations: [],
+          hotels: [],
           success: false,
           error: errorMessage,
           responseTime
@@ -79,9 +79,9 @@ export class ProviderManagerService {
     // Log summary only if shouldLog is true
     if (shouldLog) {
       const successfulProviders = results.filter(r => r.success);
-      const totalAccommodations = results.reduce((sum, r) => sum + r.accommodations.length, 0);
+      const totalHotels = results.reduce((sum, r) => sum + r.hotels.length, 0);
       
-      this.logger.log(`Completed: ${successfulProviders.length}/${this.providers.length} providers successful, ${totalAccommodations} total accommodations`);
+      this.logger.log(`Completed: ${successfulProviders.length}/${this.providers.length} providers successful, ${totalHotels} total hotels`);
     }
     
     return results;
@@ -91,12 +91,12 @@ export class ProviderManagerService {
    * Fetch from a single provider with timeout
    */
   private async fetchFromProviderWithTimeout(
-    provider: AccommodationProvider, 
+    provider: HotelProvider, 
     searchDto: SkiTripSearchDto,
     timeoutMs: number = 15000
-  ): Promise<SkiAccommodation[]> {
+  ): Promise<Hotel[]> {
     return Promise.race([
-      provider.fetchAccommodations(searchDto),
+      provider.fetchHotels(searchDto),
       new Promise<never>((_, reject) => 
         setTimeout(() => reject(new Error(`Provider ${provider.providerName} timed out after ${timeoutMs}ms`)), timeoutMs)
       )

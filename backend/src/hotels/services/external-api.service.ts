@@ -2,7 +2,7 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 import { SkiTripSearchDto } from '../dto/ski-trip-search.dto';
-import { SkiAccommodation, SkiAccommodationApiResponse } from '../interfaces/ski-accommodation.interface';
+import { Hotel, HotelApiResponse } from '../interfaces/hotel.interface';
 
 @Injectable()
 export class ExternalApiService {
@@ -11,12 +11,12 @@ export class ExternalApiService {
   constructor(private readonly httpService: HttpService) {}
 
   /**
-   * Fetches accommodations from the external API for a specific group size
+   * Fetches hotels from the external API for a specific group size
    */
-  async fetchAccommodations(searchDto: SkiTripSearchDto): Promise<SkiAccommodation[]> {
+  async fetchHotels(searchDto: SkiTripSearchDto): Promise<Hotel[]> {
     try {
       const response = await firstValueFrom(
-        this.httpService.post<SkiAccommodationApiResponse>(this.API_BASE_URL, {
+        this.httpService.post<HotelApiResponse>(this.API_BASE_URL, {
           query: searchDto
         }, {
           headers: {
@@ -42,25 +42,25 @@ export class ExternalApiService {
       
       console.error('Error fetching from external API:', error);
       throw new HttpException(
-        'Failed to fetch accommodations from external provider',
+        'Failed to fetch hotels from external provider',
         HttpStatus.INTERNAL_SERVER_ERROR
       );
     }
   }
 
   /**
-   * Fetches accommodations for multiple group sizes to provide more options
+   * Fetches hotels for multiple group sizes to provide more options
    * This addresses the limitation where the API only returns rooms for exact group size
    * Optimized to make requests in parallel for better performance
    */
-  async fetchAccommodationsForMultipleGroupSizes(
+  async fetchHotelsForMultipleGroupSizes(
     baseSearchDto: SkiTripSearchDto
-  ): Promise<SkiAccommodation[]> {
-    const allAccommodations: SkiAccommodation[] = [];
+  ): Promise<Hotel[]> {
+    const allHotels: Hotel[] = [];
     const seenHotelCodes = new Set<string>();
 
     // Create array of promises for parallel execution
-    const promises: Promise<SkiAccommodation[]>[] = [];
+    const promises: Promise<Hotel[]>[] = [];
     for (let groupSize = baseSearchDto.group_size; groupSize <= 10; groupSize++) {
       const searchDto = {
         ...baseSearchDto,
@@ -68,9 +68,9 @@ export class ExternalApiService {
       };
       
       promises.push(
-        this.fetchAccommodations(searchDto).catch(error => {
-          console.error(`Error fetching accommodations for group size ${groupSize}:`, error);
-          return [] as SkiAccommodation[]; // Return empty array on error
+        this.fetchHotels(searchDto).catch(error => {
+          console.error(`Error fetching hotels for group size ${groupSize}:`, error);
+          return [] as Hotel[]; // Return empty array on error
         })
       );
     }
@@ -79,15 +79,15 @@ export class ExternalApiService {
     const results = await Promise.all(promises);
     
     // Combine and deduplicate results
-    results.forEach(accommodations => {
-      accommodations.forEach(acc => {
-        if (!seenHotelCodes.has(acc.HotelCode)) {
-          seenHotelCodes.add(acc.HotelCode);
-          allAccommodations.push(acc);
+    results.forEach(hotels => {
+      hotels.forEach(hotel => {
+        if (!seenHotelCodes.has(hotel.HotelCode)) {
+          seenHotelCodes.add(hotel.HotelCode);
+          allHotels.push(hotel);
         }
       });
     });
 
-    return allAccommodations;
+    return allHotels;
   }
 } 

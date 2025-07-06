@@ -1,12 +1,12 @@
 import React, { useState, useCallback } from 'react'
 import NavBar from './components/navbar/nav-bar'
-import AccommodationResults, { SkiAccommodation } from './components/accommodation-results/accommodation-results'
+import HotelResults, { SkiHotel } from './components/hotel-results/hotel-results'
 import HotelModal from './components/hotel-modal/hotel-modal'
 import { ApiService, SearchParams } from './services/api.service'
 import './App.scss'
 
 const App: React.FC = () => {
-  const [accommodations, setAccommodations] = useState<SkiAccommodation[]>([]);
+  const [hotels, setHotels] = useState<SkiHotel[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
   const [searchProgress, setSearchProgress] = useState<{
@@ -14,26 +14,26 @@ const App: React.FC = () => {
     total: number;
     currentGroupSize: number;
   } | null>(null);
-  const [selectedHotel, setSelectedHotel] = useState<SkiAccommodation | null>(null);
+  const [selectedHotel, setSelectedHotel] = useState<SkiHotel | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Helper function to deduplicate accommodations by HotelCode
-  const deduplicateAccommodations = useCallback((existing: SkiAccommodation[], newOnes: SkiAccommodation[]): SkiAccommodation[] => {
-    const seenHotelCodes = new Set(existing.map(acc => acc.HotelCode));
-    const uniqueNewOnes = newOnes.filter(acc => !seenHotelCodes.has(acc.HotelCode));
+  // Helper function to deduplicate hotels by HotelCode
+  const deduplicateHotels = useCallback((existing: SkiHotel[], newOnes: SkiHotel[]): SkiHotel[] => {
+    const seenHotelCodes = new Set(existing.map(hotel => hotel.HotelCode));
+    const uniqueNewOnes = newOnes.filter(hotel => !seenHotelCodes.has(hotel.HotelCode));
     return [...existing, ...uniqueNewOnes];
   }, []);
 
-  // Helper function to sort accommodations by price
-  const sortAccommodationsByPrice = useCallback((accs: SkiAccommodation[]): SkiAccommodation[] => {
-    return accs.sort((a, b) => {
+  // Helper function to sort hotels by price
+  const sortHotelsByPrice = useCallback((hotels: SkiHotel[]): SkiHotel[] => {
+    return hotels.sort((a, b) => {
       const priceA = parseFloat(a.PricesInfo.AmountAfterTax) || 0;
       const priceB = parseFloat(b.PricesInfo.AmountAfterTax) || 0;
       return priceA - priceB;
     });
   }, []);
 
-  const handleHotelClick = (hotel: SkiAccommodation) => {
+  const handleHotelClick = (hotel: SkiHotel) => {
     setSelectedHotel(hotel);
     setIsModalOpen(true);
   };
@@ -46,7 +46,7 @@ const App: React.FC = () => {
   const handleSearch = async (searchParams: SearchParams) => {
     setIsLoading(true);
     setHasSearched(true);
-    setAccommodations([]);
+    setHotels([]);
     setSelectedHotel(null);
     setIsModalOpen(false);
     
@@ -62,7 +62,7 @@ const App: React.FC = () => {
 
     try {
       // Create promises for all group sizes
-      const groupSizePromises: Promise<{ groupSize: number; accommodations: SkiAccommodation[] }>[] = [];
+      const groupSizePromises: Promise<{ groupSize: number; hotels: SkiHotel[] }>[] = [];
       
       for (let groupSize = searchParams.group_size; groupSize <= maxGroupSize; groupSize++) {
         const groupSearchParams = {
@@ -70,18 +70,18 @@ const App: React.FC = () => {
           group_size: groupSize
         };
         
-        const promise = ApiService.searchSkiAccommodationsForGroupSize(groupSearchParams)
-          .then(accommodations => ({ groupSize, accommodations }))
+        const promise = ApiService.searchSkiHotelsForGroupSize(groupSearchParams)
+          .then(hotels => ({ groupSize, hotels }))
           .catch(error => {
             console.error(`Error fetching group size ${groupSize}:`, error);
-            return { groupSize, accommodations: [] };
+            return { groupSize, hotels: [] };
           });
         
         groupSizePromises.push(promise);
       }
 
       // Process results as they come in
-      let allAccommodations: SkiAccommodation[] = [];
+      let allHotels: SkiHotel[] = [];
       let completedCount = 0;
 
       // Use Promise.allSettled to handle all promises and process results progressively
@@ -96,20 +96,20 @@ const App: React.FC = () => {
         } : null);
 
         if (result.status === 'fulfilled') {
-          const { accommodations: newAccommodations } = result.value;
+          const { hotels: newHotels } = result.value;
           
-          // Deduplicate and add new accommodations
-          allAccommodations = deduplicateAccommodations(allAccommodations, newAccommodations);
+          // Deduplicate and add new hotels
+          allHotels = deduplicateHotels(allHotels, newHotels);
           
           // Sort and update state immediately
-          const sortedAccommodations = sortAccommodationsByPrice(allAccommodations);
-          setAccommodations(sortedAccommodations);
+          const sortedHotels = sortHotelsByPrice(allHotels);
+          setHotels(sortedHotels);
         }
       });
 
     } catch (error) {
       console.error('Search failed:', error);
-      setAccommodations([]);
+      setHotels([]);
     } finally {
       setIsLoading(false);
       setSearchProgress(null);
@@ -121,8 +121,8 @@ const App: React.FC = () => {
       <NavBar onSearch={handleSearch} isLoading={isLoading} />
       <main className="main-content">
         {hasSearched && (
-          <AccommodationResults 
-            accommodations={accommodations} 
+          <HotelResults 
+            hotels={hotels} 
             isLoading={isLoading}
             searchProgress={searchProgress}
             onHotelClick={handleHotelClick}

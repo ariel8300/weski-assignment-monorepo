@@ -1,20 +1,20 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
-import { AccommodationProvider } from '../interfaces/provider.interface';
+import { HotelProvider } from '../interfaces/provider.interface';
 import { SkiTripSearchDto } from '../dto/ski-trip-search.dto';
-import { SkiAccommodation } from '../interfaces/ski-accommodation.interface';
+import { Hotel } from '../interfaces/hotel.interface';
 
 @Injectable()
-export class ExampleSecondProvider implements AccommodationProvider {
+export class ExampleSecondProvider implements HotelProvider {
   readonly providerId = 'example-second';
   readonly providerName = 'Example Second Provider';
 
-  private readonly API_BASE_URL = 'https://api.example-second-provider.com/accommodations';
+  private readonly API_BASE_URL = 'https://api.example-second-provider.com/hotels';
 
   constructor(private readonly httpService: HttpService) {}
 
-  async fetchAccommodations(searchDto: SkiTripSearchDto): Promise<SkiAccommodation[]> {
+  async fetchHotels(searchDto: SkiTripSearchDto): Promise<Hotel[]> {
     try {
       // Example of how a different provider might have a different API structure
       const response = await firstValueFrom(
@@ -26,20 +26,20 @@ export class ExampleSecondProvider implements AccommodationProvider {
         }, {
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer YOUR_API_KEY' // Different auth method
+            'Authorization': 'Bearer MY_API_KEY' // this is just example
           },
           timeout: 10000,
         })
       );
 
-      // Transform the response to match our standard SkiAccommodation interface
-      const accommodations = this.transformResponse(response.data);
+      // Transform the response to match our standard Hotel interface
+      const hotels = this.transformResponse(response.data);
       
-      return accommodations;
+      return hotels;
     } catch (error) {
       console.error(`Error fetching from ${this.providerName}:`, error);
       throw new HttpException(
-        `Failed to fetch accommodations from ${this.providerName}`,
+        `Failed to fetch hotels from ${this.providerName}`,
         HttpStatus.INTERNAL_SERVER_ERROR
       );
     }
@@ -61,29 +61,29 @@ export class ExampleSecondProvider implements AccommodationProvider {
   }
 
   /**
-   * Transform provider-specific response to standard SkiAccommodation format
-   * This is where you'd handle different API response structures
+   * Transform provider-specific response to standard Hotel format
+   * This is where I'd handle different API response structures
    */
-  private transformResponse(data: any): SkiAccommodation[] {
+  private transformResponse(data: any): Hotel[] {
     // This is just an example - real implementation would depend on the actual API response
-    return data.accommodations?.map((acc: any) => ({
-      HotelCode: acc.id,
-      HotelName: acc.name,
+    return data.hotels?.map((hotel: any) => ({
+      HotelCode: hotel.id,
+      HotelName: hotel.name,
       HotelDescriptiveContent: {
-        Images: acc.images?.map((img: string) => ({ URL: img })) || []
+        Images: hotel.images?.map((img: string) => ({ URL: img })) || []
       },
       HotelInfo: {
         Position: {
-          Latitude: acc.latitude?.toString() || "0",
-          Longitude: acc.longitude?.toString() || "0",
-          Distances: acc.distances || []
+          Latitude: hotel.latitude?.toString() || "0",
+          Longitude: hotel.longitude?.toString() || "0",
+          Distances: hotel.distances || []
         },
-        Rating: acc.rating?.toString() || "0",
-        Beds: acc.beds?.toString() || "0"
+        Rating: hotel.rating?.toString() || "0",
+        Beds: hotel.beds?.toString() || "0"
       },
       PricesInfo: {
-        AmountAfterTax: acc.price?.toString() || "0",
-        AmountBeforeTax: acc.priceBeforeTax?.toString() || "0"
+        AmountAfterTax: hotel.price?.toString() || "0",
+        CurrencyCode: hotel.currency || "EUR"
       }
     })) || [];
   }

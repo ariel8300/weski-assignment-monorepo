@@ -73,6 +73,8 @@ justatest/
 │   ├── src/
 │   │   ├── components/     # React components
 │   │   │   ├── accommodation-results/  # Results display with progress
+│   │   │   ├── hotel-modal/ # Hotel details modal with map
+│   │   │   ├── hotel-map/  # Interactive map component
 │   │   │   ├── navbar/     # Navigation bar
 │   │   │   ├── search-form/ # Search form components
 │   │   │   ├── select/     # Select dropdown components
@@ -88,3 +90,44 @@ justatest/
 ├── start.sh                # Linux/Mac startup script
 └── README.md
 ```
+
+## 🔌 API Endpoints
+
+### Backend API (Port 3001)
+
+- `POST /hotels/search/group-size` - Search for specific group size (progressive loading)
+- `GET /hotels/health` - Provider health status
+
+### Request Format
+```json
+{
+  "ski_site": 1,
+  "from_date": "12/25/2024",
+  "to_date": "01/01/2025", 
+  "group_size": 4
+}
+```
+
+## 🎯 Available Ski Resorts
+
+1. **Val Thorens** (ID: 1)
+2. **Courchevel** (ID: 2) 
+3. **Tignes** (ID: 3)
+4. **La Plagne** (ID: 4)
+5. **Chamonix** (ID: 5)
+
+## 🚀 Performance Features
+
+- **Progressive Loading**: Results appear as they arrive from each group size
+- **Parallel Processing**: Multiple group sizes processed simultaneously
+- **Real-time Deduplication**: Frontend removes duplicate hotels automatically
+- **Price Sorting**: Results sorted by price (lowest first)
+- **Error Resilience**: Failed requests don't block other results
+
+## 🎨 UI Features
+
+- **Responsive Design**: Works on desktop, tablet, and mobile
+- **Interactive Map**: Hotel locations displayed on OpenStreetMap
+- **Modal Details**: Click any hotel card for comprehensive information
+- **Progress Indicators**: Real-time loading progress with group size tracking
+- **Smart Validation**: Date validation and user-friendly error messages

@@ -1,39 +1,28 @@
 import { Injectable } from '@nestjs/common';
 import { SkiTripSearchDto } from './dto/ski-trip-search.dto';
-import { SkiAccommodation } from './interfaces/ski-accommodation.interface';
-import { AccommodationAggregatorService } from './services/accommodation-aggregator.service';
+import { Hotel } from './interfaces/hotel.interface';
+import { HotelAggregatorService } from './services/hotel-aggregator.service';
 
 @Injectable()
 export class HotelsService {
-  constructor(private readonly accommodationAggregator: AccommodationAggregatorService) {}
+  constructor(private readonly hotelAggregator: HotelAggregatorService) {}
 
   /**
-   * Search for ski accommodations using the new provider architecture
-   * This method handles multiple providers, group sizes, and result aggregation
-   * 
-   * @param searchDto - Ski trip search parameters
-   * @returns Array of ski accommodations sorted by price
-   */
-  async searchSkiAccommodations(searchDto: SkiTripSearchDto): Promise<SkiAccommodation[]> {
-    return this.accommodationAggregator.searchAccommodations(searchDto);
-  }
-
-  /**
-   * Search for ski accommodations for a specific group size only
+   * Search for hotels for a specific group size only
    * This method is designed for progressive loading where the frontend
    * makes multiple requests for different group sizes
    * 
    * @param searchDto - Ski trip search parameters (group_size will be used as-is)
-   * @returns Array of ski accommodations for the specific group size, sorted by price
+   * @returns Array of hotels for the specific group size, sorted by price
    */
-  async searchSkiAccommodationsForGroupSize(searchDto: SkiTripSearchDto): Promise<SkiAccommodation[]> {
-    return this.accommodationAggregator.searchAccommodationsForGroupSize(searchDto);
+  async searchHotelsForGroupSize(searchDto: SkiTripSearchDto): Promise<Hotel[]> {
+    return this.hotelAggregator.searchHotelsForGroupSize(searchDto);
   }
 
   /**
    * Get system statistics and provider health
    */
   async getSystemStats() {
-    return this.accommodationAggregator.getSearchStats();
+    return this.hotelAggregator.getSearchStats();
   }
 } 

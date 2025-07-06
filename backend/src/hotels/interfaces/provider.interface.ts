@@ -1,7 +1,7 @@
 import { SkiTripSearchDto } from '../dto/ski-trip-search.dto';
-import { SkiAccommodation } from './ski-accommodation.interface';
+import { Hotel } from './hotel.interface';
 
-export interface AccommodationProvider {
+export interface HotelProvider {
   /**
    * Unique identifier for the provider
    */
@@ -13,11 +13,11 @@ export interface AccommodationProvider {
   readonly providerName: string;
 
   /**
-   * Fetch accommodations from this provider
+   * Fetch hotels from this provider
    * @param searchDto - Search parameters
-   * @returns Promise with array of accommodations
+   * @returns Promise with array of hotels
    */
-  fetchAccommodations(searchDto: SkiTripSearchDto): Promise<SkiAccommodation[]>;
+  fetchHotels(searchDto: SkiTripSearchDto): Promise<Hotel[]>;
 
   /**
    * Check if the provider is available/healthy
@@ -29,7 +29,7 @@ export interface AccommodationProvider {
 export interface ProviderResult {
   providerId: string;
   providerName: string;
-  accommodations: SkiAccommodation[];
+  hotels: Hotel[];
   success: boolean;
   error?: string;
   responseTime?: number;
