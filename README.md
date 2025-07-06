@@ -86,8 +86,6 @@ justatest/
 │   │   └── main.tsx
 │   ├── Dockerfile
 ├── docker-compose.yml       # Production Docker setup
-├── start.bat               # Windows startup script
-├── start.sh                # Linux/Mac startup script
 └── README.md
 ```
 
@@ -102,8 +100,8 @@ justatest/
 ```json
 {
   "ski_site": 1,
-  "from_date": "12/25/2024",
-  "to_date": "01/01/2025", 
+  "from_date": "07/07/2025",
+  "to_date": "07/14/2025", 
   "group_size": 4
 }
 ```
