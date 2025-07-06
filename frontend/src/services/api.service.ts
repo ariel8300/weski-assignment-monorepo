@@ -1,6 +1,6 @@
 import { SkiAccommodation } from '../components/accommodation-results/accommodation-results';
 
-const API_BASE_URL = 'http://localhost:3001';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001';
 
 export interface SearchParams {
   ski_site: number;
