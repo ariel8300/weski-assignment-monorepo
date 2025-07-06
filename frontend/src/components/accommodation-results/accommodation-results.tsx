@@ -31,13 +31,43 @@ export interface SkiAccommodation {
 interface AccommodationResultsProps {
   accommodations: SkiAccommodation[];
   isLoading: boolean;
+  searchProgress?: {
+    completed: number;
+    total: number;
+    currentGroupSize: number;
+  } | null;
+  onHotelClick?: (hotel: SkiAccommodation) => void;
 }
 
-const AccommodationResults: React.FC<AccommodationResultsProps> = ({ accommodations, isLoading }) => {
+const AccommodationResults: React.FC<AccommodationResultsProps> = ({ accommodations, isLoading, searchProgress, onHotelClick }) => {
   if (isLoading) {
     return (
       <div className="accommodation-results">
-        <div className="loading">Loading accommodations...</div>
+        <div className="loading">
+          {searchProgress ? (
+            <div className="progressive-loading">
+              <div className="loading-text">
+                Searching group sizes {searchProgress.currentGroupSize - searchProgress.completed + 1}-{searchProgress.currentGroupSize}...
+              </div>
+              <div className="progress-bar">
+                <div 
+                  className="progress-fill" 
+                  style={{ width: `${(searchProgress.completed / searchProgress.total) * 100}%` }}
+                ></div>
+              </div>
+              <div className="progress-text">
+                {searchProgress.completed} of {searchProgress.total} group sizes completed
+              </div>
+              {accommodations.length > 0 && (
+                <div className="results-so-far">
+                  Found {accommodations.length} accommodations so far...
+                </div>
+              )}
+            </div>
+          ) : (
+            <div>Loading accommodations...</div>
+          )}
+        </div>
       </div>
     );
   }
@@ -72,7 +102,12 @@ const AccommodationResults: React.FC<AccommodationResultsProps> = ({ accommodati
       </div>
       <div className="results-grid">
         {accommodations.map((accommodation) => (
-          <div key={accommodation.HotelCode} className="accommodation-card">
+          <div 
+            key={accommodation.HotelCode} 
+            className="accommodation-card"
+            onClick={() => onHotelClick?.(accommodation)}
+            style={{ cursor: onHotelClick ? 'pointer' : 'default' }}
+          >
             <div className="card-image">
               <img 
                 src={getMainImage(accommodation.HotelDescriptiveContent.Images)} 

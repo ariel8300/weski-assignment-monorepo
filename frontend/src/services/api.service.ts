@@ -31,4 +31,26 @@ export class ApiService {
       throw error;
     }
   }
+
+  static async searchSkiAccommodationsForGroupSize(searchParams: SearchParams): Promise<SkiAccommodation[]> {
+    try {
+      const response = await fetch(`${API_BASE_URL}/hotels/search/group-size`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(searchParams),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Error fetching ski accommodations for group size:', error);
+      throw error;
+    }
+  }
 } 

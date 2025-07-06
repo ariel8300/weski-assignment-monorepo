@@ -20,6 +20,51 @@
     color: #666;
   }
 
+  .progressive-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    max-width: 400px;
+    margin: 0 auto;
+
+    .loading-text {
+      font-size: 16px;
+      color: #333;
+      font-weight: 500;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background-color: #e0e0e0;
+      border-radius: 4px;
+      overflow: hidden;
+
+      .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #2c7be5, #6c5ce7);
+        border-radius: 4px;
+        transition: width 0.3s ease;
+      }
+    }
+
+    .progress-text {
+      font-size: 14px;
+      color: #666;
+    }
+
+    .results-so-far {
+      font-size: 14px;
+      color: #2c7be5;
+      font-weight: 500;
+      background-color: #f8f9ff;
+      padding: 8px 16px;
+      border-radius: 20px;
+      border: 1px solid #e3f2fd;
+    }
+  }
+
   .results-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
@@ -32,10 +77,31 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     overflow: hidden;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
+    position: relative;
 
     &:hover {
       transform: translateY(-4px);
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    }
+
+    &::after {
+      content: 'Click to view details';
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: rgba(44, 123, 229, 0.9);
+      color: white;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 500;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      pointer-events: none;
+    }
+
+    &:hover::after {
+      opacity: 1;
     }
 
     .card-image {
