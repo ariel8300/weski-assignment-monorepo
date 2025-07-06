@@ -47,7 +47,7 @@ const AccommodationResults: React.FC<AccommodationResultsProps> = ({ accommodati
           {searchProgress ? (
             <div className="progressive-loading">
               <div className="loading-text">
-                Searching group sizes {searchProgress.currentGroupSize - searchProgress.completed + 1}-{searchProgress.currentGroupSize}...
+                Searching {/*group sizes {searchProgress.currentGroupSize - searchProgress.completed + 1}-{searchProgress.currentGroupSize}*/}...
               </div>
               <div className="progress-bar">
                 <div 

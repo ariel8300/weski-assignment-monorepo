@@ -1,6 +1,7 @@
 import React from 'react';
 import './hotel-modal.scss';
 import { SkiAccommodation } from '../accommodation-results/accommodation-results';
+import HotelMap from '../hotel-map/hotel-map';
 
 interface HotelModalProps {
   hotel: SkiAccommodation | null;
@@ -84,6 +85,14 @@ const HotelModal: React.FC<HotelModalProps> = ({ hotel, isOpen, onClose }) => {
                 </div>
                 <div className="distances">
                   {getAllDistances(hotel.HotelInfo.Position.Distances)}
+                </div>
+                <div className="map-section">
+                  <h4>Location on Map</h4>
+                  <HotelMap
+                    latitude={hotel.HotelInfo.Position.Latitude}
+                    longitude={hotel.HotelInfo.Position.Longitude}
+                    hotelName={hotel.HotelName}
+                  />
                 </div>
               </div>
             </div>

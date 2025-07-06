@@ -30,6 +30,17 @@
         }
     }
 
+    .nights-indicator {
+        background: #f8f9ff;
+        color: #2c7be5;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: 500;
+        border: 1px solid #e3f2fd;
+        white-space: nowrap;
+    }
+
     // Responsive design
     @media (max-width: 768px) {
         flex-wrap: wrap;
@@ -37,6 +48,11 @@
 
         .search-form-date-picker {
             width: 100px;
+        }
+
+        .nights-indicator {
+            font-size: 11px;
+            padding: 3px 6px;
         }
     }
 }
